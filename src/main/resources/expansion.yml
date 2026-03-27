@@ -1,0 +1,7 @@
+name: "StasisBlocker"
+prefix: "[StasisBlocker]"
+description: "Prevents stasis chamber usage in combat by limiting how far an enderpearl can teleport a player."
+main: "com.cameronlattz.stasisblocker.StasisBlockerExpansion"
+version: "1.0.0"
+website: "https://gladiusmc.org"
+author: "NonprofitProphet"
