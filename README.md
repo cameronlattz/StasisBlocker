@@ -15,7 +15,7 @@ A CombatLogX Expansion that prevents players from exploiting enderpearl stasis c
 
 ## Installation
 
-1. Download `Stasis Blocker.jar` from the [target](https://github.com/cameronlattz/StasisBlocker/target) page.
+1. Download `Stasis Blocker.jar` from the [Releases](https://github.com/cameronlattz/StasisBlocker/releases) page.
 2. Place the JAR file into your server’s `plugins/CombatLogX/expansions/` folder.
 3. Start or reload your server.
 4. Configure the plugin by editing `plugins/CombatLogX/expansions/StasisBlocker/config.yml` as needed.
