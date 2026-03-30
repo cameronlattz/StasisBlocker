@@ -1,6 +1,6 @@
 # StasisBlocker
 
-A CombatLogX Expansion that prevents players from exploiting enderpearl stasis chambers to escape combat by blocking enderpearl teleports over a configurable distance and across dimensions while in combat.
+A CombatLogX Expansion that prevents players from exploiting enderpearl stasis chambers to escape combat by blocking enderpearl teleports if the enderpearl is above a ticks_lived threshold.
 
 ---
 
