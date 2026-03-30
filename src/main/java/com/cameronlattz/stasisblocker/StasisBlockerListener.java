@@ -60,7 +60,10 @@ public class StasisBlockerListener extends ExpansionListener {
         if (stasisCandidates.remove(uuid) != null) {
             event.setCancelled(true);
             double stasisEnderpearlAge = configuration.getStasisEnderpearlAge();
-            String message = configuration.getBlockedMessage().replace("{age}", String.valueOf((int) Math.floor(stasisEnderpearlAge)));
+            int ticks = (int) Math.floor(stasisEnderpearlAge);
+            String message = configuration.getBlockedMessage()
+                    .replace("{ticks}", String.valueOf(ticks))
+                    .replace("{seconds}", String.valueOf(ticks/20));
             shooter.sendMessage(message);
         }
     }

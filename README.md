@@ -34,5 +34,5 @@ prevent-stasis: true
 stasis-enderpearl-age: 300
 
 # Messages that will be sent to players after an enderpearl teleport is blocked.
-messages:  # Use {age} to include the enderpearl age in ticks in the message.
-  blocked: "§cYou cannot teleport with an enderpearl older than {age} ticks while in combat."
+messages:  # Use {ticks} to include the enderpearl age in ticks, or {seconds} to include the age in seconds.
+  blocked: "§cYou cannot teleport with an enderpearl older than {seconds} seconds while in combat."
