@@ -6,9 +6,8 @@ A CombatLogX Expansion that prevents players from exploiting enderpearl stasis c
 
 ## Features
 
-- Blocks enderpearl teleports longer than a specified horizontal distance while combat-tagged.
-- Takes nether dimension scaling into account for distance calculations.
-- Configurable distance and messages via `config.yml`.
+- While combat-tagged, blocks teleports from enderpearls that have lived longer than a configurable amount of ticks.
+- Configurable via `config.yml`.
 - Compatible with Minecraft 1.8 and above (requires CombatLogX with expansion support).
 
 ---
@@ -27,14 +26,13 @@ A CombatLogX Expansion that prevents players from exploiting enderpearl stasis c
 The default `config.yml` includes:
 
 ```yaml
-# Block enderpearl teleports longer than a specified distance while in combat. Default: true
-prevent-distant-enderpearl: true
+# Block enderpearls older than a certain age while in combat.
+prevent-stasis: true
 
-# How far a player can travel with an enderpearl while in combat before being blocked. Has no effect if prevent-distant-enderpearl is false.
-# Nether coordinates will be converted to overworld coordinates for distance calculation.
-# Default: 300 (blocks)
-max-enderpearl-distance: 300
+# Age of enderpearls that will be blocked while in combat, in ticks. 20 ticks = 1 second.
+# Default: 300 (ticks)
+stasis-enderpearl-age: 300
 
-# Messages that will be sent to players after an enderpearl teleport is blocked by the stasis expansion.
-messages:  # Use {distance} to include the teleport distance in the message.
-  distance-blocked: "§cYou cannot teleport with an enderpearl more than {distance} blocks while in combat."
+# Messages that will be sent to players after an enderpearl teleport is blocked.
+messages:  # Use {age} to include the enderpearl age in ticks in the message.
+  blocked: "§cYou cannot teleport with an enderpearl older than {age} ticks while in combat."

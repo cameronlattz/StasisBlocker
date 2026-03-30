@@ -3,14 +3,21 @@ package com.cameronlattz.stasisblocker;
 import com.github.sirblobman.combatlogx.api.ICombatLogX;
 import com.github.sirblobman.combatlogx.api.expansion.ExpansionListener;
 import com.github.sirblobman.combatlogx.api.manager.ICombatManager;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class StasisBlockerListener extends ExpansionListener {
     private final StasisBlockerConfiguration configuration;
+    private final Map<UUID, Long> stasisCandidates = new ConcurrentHashMap<>();
+    private final static int EXPIRY_TIME = 500;
+    private static final String PERM_BYPASS = "stasisblocker.bypass";
 
     public StasisBlockerListener(StasisBlockerExpansion expansion) {
         super(expansion);
@@ -18,47 +25,43 @@ public class StasisBlockerListener extends ExpansionListener {
     }
 
     @EventHandler
-    public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (event.getCause() != PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
-            return;
-        }
+    public void onEnderpearlLand(ProjectileHitEvent event) {
+        if (!(event.getEntity() instanceof EnderPearl)) return;
 
-        Player player = event.getPlayer();
+        EnderPearl enderpearl = (EnderPearl) event.getEntity();
+        if (!(enderpearl.getShooter() instanceof Player)) return;
+
+        boolean isStasisBlockingEnabled = configuration.isStasisBlockingEnabled();
+        if (!isStasisBlockingEnabled) return;
+
+        int age = enderpearl.getTicksLived();
+        int stasisEnderpearlAge = configuration.getStasisEnderpearlAge();
+        if (age < stasisEnderpearlAge) return;
+
+        Player shooter = (Player)enderpearl.getShooter();
         ICombatLogX combatLogX = getCombatLogX();
         ICombatManager combatManager = combatLogX.getCombatManager();
-        if (!combatManager.isInCombat(player)) {
-            return;
-        }
+        if (!combatManager.isInCombat(shooter)) return;
 
-        Location from = event.getFrom();
-        Location to = event.getTo();
-        if (to == null) {
-            return;
-        }
+        if (shooter.hasPermission(PERM_BYPASS)) return;
 
-        boolean isDistanceBlockingEnabled = configuration.isDistanceBlockingEnabled();
-        if (!isDistanceBlockingEnabled) {
-            return;
-        }
+        long now = System.currentTimeMillis();
+        stasisCandidates.entrySet().removeIf(e -> e.getValue() + EXPIRY_TIME < now);
+        UUID uuid = shooter.getUniqueId();
+        stasisCandidates.put(uuid, System.currentTimeMillis());
+    }
 
-        double toX = to.getX();
-        double toZ = to.getZ();
-        if (to.getWorld().getEnvironment() == World.Environment.NETHER && from.getWorld().getEnvironment() != World.Environment.NETHER) {
-            toX = toX * 8;
-            toZ = toZ * 8;
-        }
-        else if (from.getWorld().getEnvironment() == World.Environment.NETHER && to.getWorld().getEnvironment() != World.Environment.NETHER) {
-            toX = toX / 8;
-            toZ = toZ / 8;
-        }
-        double deltaX = toX - from.getX();
-        double deltaZ = toZ - from.getZ();
-        double horizontalDistance = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
-        double maxDistance = configuration.getMaxTeleportDistance();
-        if (horizontalDistance > maxDistance) {
+    @EventHandler
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
+        if (event.getCause() != PlayerTeleportEvent.TeleportCause.ENDER_PEARL) return;
+
+        Player shooter = event.getPlayer();
+        UUID uuid = shooter.getUniqueId();
+        if (stasisCandidates.remove(uuid) != null) {
             event.setCancelled(true);
-            String message = configuration.getDistanceBlockedMessage().replace("{distance}", String.valueOf((int) Math.floor(maxDistance)));
-            player.sendMessage(message);
+            double stasisEnderpearlAge = configuration.getStasisEnderpearlAge();
+            String message = configuration.getBlockedMessage().replace("{age}", String.valueOf((int) Math.floor(stasisEnderpearlAge)));
+            shooter.sendMessage(message);
         }
     }
 }

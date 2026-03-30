@@ -1,7 +1,10 @@
 name: "StasisBlocker"
 prefix: "[StasisBlocker]"
-description: "Prevents stasis chamber usage in combat by limiting how far an enderpearl can teleport a player."
+description: "Prevents stasis chamber usage in combat by blocking teleports from enderpearls spawned before a certain time."
 main: "com.cameronlattz.stasisblocker.StasisBlockerExpansion"
 version: "1.0.0"
 website: "https://gladiusmc.org"
 author: "NonprofitProphet"
+permissions:
+  - node: stasisblocker.bypass
+    description: Allows a player to bypass stasis blocking

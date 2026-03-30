@@ -4,50 +4,50 @@ import com.github.sirblobman.api.configuration.IConfigurable;
 import org.bukkit.configuration.ConfigurationSection;
 
 public final class StasisBlockerConfiguration implements IConfigurable {
-    private final boolean DEFAULT_DISTANCE_BLOCKING_ENABLED = true;
-    private final int DEFAULT_MAX_TELEPORT_DISTANCE = 300;
-    private final String DEFAULT_DISTANCE_BLOCKED_MESSAGE = "§cYou cannot teleport more than {distance} blocks away while in combat.";
-    private boolean distanceBlockingEnabled;
-    private int maxTeleportDistance;
-    private String distanceBlockedMessage;
+    private final boolean DEFAULT_STASIS_BLOCKING_ENABLED = true;
+    private final int DEFAULT_STASIS_PEARL_AGE = 300;
+    private final String DEFAULT_BLOCKED_MESSAGE = "§cYou cannot teleport with an enderpearl older than {age} ticks while in combat.";
+    private boolean stasisBlockingEnabled;
+    private int stasisEnderpearlAge;
+    private String blockedMessage;
 
     public StasisBlockerConfiguration() {
-        this.distanceBlockingEnabled = DEFAULT_DISTANCE_BLOCKING_ENABLED;
-        this.maxTeleportDistance = DEFAULT_MAX_TELEPORT_DISTANCE;
-        this.distanceBlockedMessage = DEFAULT_DISTANCE_BLOCKED_MESSAGE;
+        this.stasisBlockingEnabled = DEFAULT_STASIS_BLOCKING_ENABLED;
+        this.stasisEnderpearlAge = DEFAULT_STASIS_PEARL_AGE;
+        this.blockedMessage = DEFAULT_BLOCKED_MESSAGE;
     }
 
     @Override
     public void load(ConfigurationSection config) {
-        setDistanceBlockingEnabled(config.getBoolean("prevent-distant-enderpearl", DEFAULT_DISTANCE_BLOCKING_ENABLED));
-        setMaxTeleportDistance(config.getInt("max-enderpearl-distance", DEFAULT_MAX_TELEPORT_DISTANCE));
+        setStasisBlockingEnabled(config.getBoolean("prevent-stasis", DEFAULT_STASIS_BLOCKING_ENABLED));
+        setStasisEnderpearlAge(config.getInt("stasis-enderpearl-age", DEFAULT_STASIS_PEARL_AGE));
         ConfigurationSection messagesSection = config.getConfigurationSection("messages");
         if (messagesSection != null) {
-            setDistanceBlockedMessage(messagesSection.getString("distance-blocked", DEFAULT_DISTANCE_BLOCKED_MESSAGE));
+            setBlockedMessage(messagesSection.getString("blocked", DEFAULT_BLOCKED_MESSAGE));
         }
     }
 
-    public boolean isDistanceBlockingEnabled() {
-        return this.distanceBlockingEnabled;
+    public boolean isStasisBlockingEnabled() {
+        return this.stasisBlockingEnabled;
     }
 
-    public void setDistanceBlockingEnabled(boolean isStasisBlockingEnabled) {
-        this.distanceBlockingEnabled = isStasisBlockingEnabled;
+    public void setStasisBlockingEnabled(boolean isStasisBlockingEnabled) {
+        this.stasisBlockingEnabled = isStasisBlockingEnabled;
     }
 
-    public int getMaxTeleportDistance() {
-        return this.maxTeleportDistance;
+    public int getStasisEnderpearlAge() {
+        return this.stasisEnderpearlAge;
     }
 
-    public void setMaxTeleportDistance(int maxTeleportDistance) {
-        this.maxTeleportDistance = maxTeleportDistance;
+    public void setStasisEnderpearlAge(int stasisEnderpearlAge) {
+        this.stasisEnderpearlAge = stasisEnderpearlAge;
     }
 
-    public String getDistanceBlockedMessage() {
-        return this.distanceBlockedMessage;
+    public String getBlockedMessage() {
+        return this.blockedMessage;
     }
 
-    public void setDistanceBlockedMessage(String distanceBlockedMessage) {
-        this.distanceBlockedMessage = distanceBlockedMessage;
+    public void setBlockedMessage(String blockedMessage) {
+        this.blockedMessage = blockedMessage;
     }
 }
